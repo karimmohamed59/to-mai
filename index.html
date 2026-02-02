@@ -8,14 +8,21 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: pink;
+      background: #ffe6eb;
       text-align: center;
       padding: 30px;
+      position: relative;
     }
 
     h1 {
-      color: #b30059;
+      color: #e91e63;
       font-size: 28px;
+    }
+
+    #message {
+      font-size: 20px;
+      margin-top: 15px;
+      color: #800040;
     }
 
     button {
@@ -25,30 +32,29 @@
       border-radius: 10px;
       cursor: pointer;
       margin: 10px;
+      position: absolute;
     }
 
     #yesBtn {
-      background-color: red;
+      background-color: #e91e63;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #999;
       color: white;
       transition: transform 0.3s;
     }
 
-    #noBtn {
-      background-color: white;
-      color: black;
+    #photos {
+      margin-top: 25px;
     }
 
-    img {
+    #photos img {
       width: 80%;
       max-width: 300px;
       margin-top: 20px;
       border-radius: 15px;
-    }
-
-    #message {
-      font-size: 20px;
-      margin-top: 15px;
-      color: #800040;
     }
   </style>
 </head>
@@ -61,7 +67,137 @@
   <button id="noBtn">NO 🙃</button>
 
   <div id="message"></div>
-  <img id="photo" src="" style="display:none;">
+  <div id="photos">
+    <img id="photo" src="" style="display:none;">
+  </div>
+
+  <script>
+    const yesPhotos = [
+      "photos/yes1.jpg",
+      "photos/yes2.jpg",
+      "photos/yes3.jpg"
+    ];
+
+    const noPhotos = [
+      "photos/no5.jpg",
+      "photos/no6.jpg",
+      "photos/no7.jpg",
+      "photos/no8.jpg",
+      "photos/no9.jpg",
+      "photos/no10.jpg"
+    ];
+
+    const noMessages = [
+      "Pleaseeee 🥺💔",
+      "Are you sure? 😢",
+      "Come on, don’t break my heart 💘",
+      "I’ll be the best partner ever 😭",
+      "Last chance… maybe? 🥹❤️",
+      "Okay… but still no? 😭💔"
+    ];
+
+    let noClickCount = 0;
+    let yesClickCount = 0;
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+    const photo = document.getElementById("photo");
+
+    // Helper function to move the "No" button to a random position
+    function moveNoButton() {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
+    yesBtn.onclick = () => {
+      const imgIndex = yesClickCount % yesPhotos.length;
+      photo.src = yesPhotos[imgIndex];
+      photo.style.display = "block";
+      message.innerHTML = "YAYYYY 💖 I knew you’d say YES! ❤️😍";
+      yesClickCount++;
+    };
+
+    noBtn.onclick = () => {
+      const imgIndex = noClickCount % noPhotos.length;
+      const msgIndex = noClickCount % noMessages.length;
+
+      photo.src = noPhotos[imgIndex];
+      photo.style.display = "block";
+      message.innerHTML = noMessages[<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine ❤️</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6eb;
+      text-align: center;
+      padding: 30px;
+      position: relative;
+    }
+
+    h1 {
+      color: #e91e63;
+      font-size: 28px;
+    }
+
+    #message {
+      font-size: 20px;
+      margin-top: 15px;
+      color: #800040;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+      position: absolute;
+    }
+
+    #yesBtn {
+      background-color: #e91e63;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #999;
+      color: white;
+      transition: transform 0.3s;
+    }
+
+    #photos {
+      margin-top: 25px;
+    }
+
+    #photos img {
+      width: 80%;
+      max-width: 300px;
+      margin-top: 20px;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Will you be my Valentine? ❤️</h1>
+
+  <button id="yesBtn">YES 💖</button>
+  <button id="noBtn">NO 🙃</button>
+
+  <div id="message"></div>
+  <div id="photos">
+    <img id="photo" src="" style="display:none;">
+  </div>
 
   <script>
     const yesPhotos = [
@@ -96,6 +232,14 @@
     const message = document.getElementById("message");
     const photo = document.getElementById("photo");
 
+    // Helper function to move the "No" button to a random position
+    function moveNoButton() {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    }
+
     yesBtn.onclick = () => {
       const imgIndex = yesClickCount % yesPhotos.length;
       photo.src = yesPhotos[imgIndex];
@@ -110,15 +254,4 @@
 
       photo.src = noPhotos[imgIndex];
       photo.style.display = "block";
-      message.innerHTML = noMessages[msgIndex];
-
-      // make YES button bigger
-      const scale = 1 + (noClickCount + 1) * 0.15;
-      yesBtn.style.transform = `scale(${scale})`;
-
-      noClickCount++;
-    };
-  </script>
- 
-</body>
-</html>
+      message.innerHTML = noMessages[

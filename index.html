@@ -7,26 +7,23 @@
 
 <style>
   body {
-    margin: 0;
-    padding: 20px;
     font-family: Arial, sans-serif;
     background: #ffe6eb;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: center;
+    padding: 30px;
     min-height: 100vh;
+    position: relative;
   }
 
   h1 {
     color: #e91e63;
-    text-align: center;
+    font-size: 28px;
   }
 
   #message {
     font-size: 20px;
-    color: #800040;
     margin: 15px 0;
-    text-align: center;
+    color: #800040;
     min-height: 30px;
   }
 
@@ -35,6 +32,7 @@
     width: 100%;
     height: 120px;
     max-width: 350px;
+    margin: 20px auto;
   }
 
   button {
@@ -62,25 +60,26 @@
     transition: transform 0.3s;
   }
 
-  #photoBox {
+  #photos {
     margin-top: 25px;
-    width: 100%;
-    max-width: 320px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
 
-  #photoBox img {
-    width: 100%;
+  #photos img {
+    width: 80%;
+    max-width: 300px;
     border-radius: 16px;
-    display: none;
+    margin-top: 15px;
+    display: none; /* hidden by default */
   }
 </style>
 </head>
 
 <body>
 
-<h1>Will you marry me? mai ❤️</h1>
+<h1>Will you be my marry me mai♥️? ❤️</h1>
 
 <div class="buttons">
   <button id="yesBtn">YES 💖</button>
@@ -89,61 +88,56 @@
 
 <div id="message"></div>
 
-<div id="photoBox">
-  <img id="photo">
+<div id="photos">
+  <img src="photos/yes1.jpg" id="yes1">
+  <img src="photos/yes2.jpg" id="yes2">
+  <img src="photos/yes3.jpg" id="yes3">
+  <img src="photos/no5.jpg" id="no1">
+  <img src="photos/no6.jpg" id="no2">
+  <img src="photos/no7.jpg" id="no3">
+  <img src="photos/no8.jpg" id="no4">
+  <img src="photos/no9.jpg" id="no5">
+  <img src="photos/no10.jpg" id="no6">
 </div>
 
 <script>
-  const yesPhotos = [
-    "photos/yes1.jpg",
-    "photos/yes2.jpg",
-    "photos/yes3.jpg"
-  ];
-
-  const noPhotos = [
-    "photos/no5.jpg",
-    "photos/no6.jpg",
-    "photos/no7.jpg",
-    "photos/no8.jpg",
-    "photos/no9.jpg",
-    "photos/no10.jpg"
-  ];
-
+  const yesImages = ["yes1", "yes2", "yes3"];
+  const noImages = ["no1","no2","no3","no4","no5","no6"];
   const noMessages = [
     "Pleaseeee 🥺",
     "Are you sure? 😢",
     "Come on 😭",
     "Don’t break my heart 💔",
     "I’ll be so sad 🥹",
-    "Last chance 😭❤️"
+    "Last chance  mai 😭❤️"
   ];
-
-  let noCount = 0;
-  let yesCount = 0;
 
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const message = document.getElementById("message");
-  const photo = document.getElementById("photo");
 
+  let noCount = 0;
+
+  // YES button shows all yes images
   yesBtn.onclick = () => {
-    photo.src = yesPhotos[yesCount % yesPhotos.length];
-    photo.style.display = "block";
+    yesImages.forEach(id => {
+      document.getElementById(id).style.display = "block";
+    });
     message.innerHTML = "YAAAY 💖 I knew it 😍❤️";
-    yesCount++;
   };
 
+  // NO button moves and shows one NO image each time
   noBtn.onclick = () => {
-    photo.src = noPhotos[noCount % noPhotos.length];
-    photo.style.display = "block";
+    const imgId = noImages[noCount % noImages.length];
+    document.getElementById(imgId).style.display = "block";
     message.innerHTML = noMessages[noCount % noMessages.length];
 
-    // playful movement (mobile-safe)
+    // move NO button randomly
     const moveX = Math.random() * 200 - 100;
     const moveY = Math.random() * 60 - 30;
     noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
 
-    // YES button grows
+    // slightly grow YES button
     const scale = 1 + (noCount + 1) * 0.12;
     yesBtn.style.transform = `scale(${scale})`;
 

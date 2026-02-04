@@ -69,7 +69,7 @@
       border-radius:999px;
       cursor:pointer;
       box-shadow: 0 8px 18px rgba(120,40,70,0.12);
-      transition: left 420ms cubic-bezier(.2,.9,.2,1), top 420ms cubic-bezier(.2,.9,.2,1), transform 320ms;
+      transition: left 420ms cubic-bezier(.2,.9,.2,1), top 420ms cubic-bezier(.2,.9,.2,1), transform 300ms;
       position:absolute;
       transform: translate(-50%,-50%);
     }
@@ -223,7 +223,7 @@
   </div>
 
   <script>
-    // Elements
+    // ---------- Elements ----------
     const stage = document.getElementById('stage');
     const noBtn = document.getElementById('noBtn');
     const yesBtn = document.getElementById('yesBtn');
@@ -266,16 +266,19 @@
 
     function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-    // --- Hover-evade configuration ---
-    const HOVER_THRESHOLD = 140; // px: how close cursor must be to start evading
-    const MAX_PUSH = 220;        // px: maximum push-away distance
-    const PADDING = 12;          // px: keep button away from stage edge
+    // ---------- Evade tuning: easier to catch, playful ----------
+    // Tweak these to make the button more/less evasive:
+    const HOVER_THRESHOLD = 100; // px distance to start evading (smaller = easier to catch)
+    const MAX_PUSH = 120;        // px maximum push distance (smaller = easier to catch)
+    const PADDING = 12;          // px keep button away from stage edge
+    const EVADE_COOLDOWN = 420;  // ms minimum time between consecutive evades (higher = easier)
 
+    let lastEvade = 0;
     let rafScheduled = false;
     let lastMouse = { x: 0, y: 0 };
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-    // Enable evasive behavior only on non-touch devices
+    // Only apply evasive hover on pointer devices
     if (!isTouch) {
       stage.addEventListener('mousemove', (ev) => {
         lastMouse.x = ev.clientX;
@@ -285,19 +288,24 @@
           requestAnimationFrame(processEvade);
         }
       });
-      // small playful nudge when pointer enters the button directly
+
+      // gentle nudge on direct mouseenter (gives player a chance to grab it)
       noBtn.addEventListener('mouseenter', () => {
-        // slightly increase threshold effect
+        // small pop to make it playful but not impossible
         noBtn.animate([
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1)' },
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1.06)' },
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1)' }
-        ], { duration: 420, easing: 'ease-out' });
+          { transform: 'translate(-50%,-50%) scale(1)' },
+          { transform: 'translate(-50%,-50%) scale(1.04)' },
+          { transform: 'translate(-50%,-50%) scale(1)' }
+        ], { duration: 220, easing: 'ease-out' });
       });
     }
 
     function processEvade(){
       rafScheduled = false;
+      const now = Date.now();
+      // enforce cooldown so it doesn't teleport repeatedly
+      if (now - lastEvade < EVADE_COOLDOWN) return;
+
       const stageRect = stage.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
@@ -316,12 +324,14 @@
 
       // only evade when cursor is close
       if (dist < HOVER_THRESHOLD) {
-        // normalized vector
+        lastEvade = now;
+
+        // normalized vector (random small jitter if exactly on top)
         const nx = (dist === 0) ? (Math.random() - 0.5) : vx / dist;
         const ny = (dist === 0) ? (Math.random() - 0.5) : vy / dist;
 
-        // compute push amount proportional to how close cursor is
-        const push = Math.min(MAX_PUSH, (HOVER_THRESHOLD - dist) * 1.4 + 30);
+        // push amount smaller and gentler than before, proportional to closeness
+        const push = Math.min(MAX_PUSH, Math.max(30, (HOVER_THRESHOLD - dist) * 0.9 + 12));
 
         let targetX = btnCenterX + nx * push;
         let targetY = btnCenterY + ny * push;
@@ -334,31 +344,34 @@
         const minY = halfH + PADDING;
         const maxY = stageRect.height - halfH - PADDING;
 
-        // if target would go outside, bounce it to a random safe location instead
+        // if target would go outside, pick a nearby safe spot instead (not a full teleport)
         if (targetX < minX || targetX > maxX || targetY < minY || targetY > maxY) {
-          targetX = randInt(minX, maxX);
-          targetY = randInt(minY, maxY);
+          // pick a spot biased away from cursor but within bounds
+          const safeX = Math.max(minX, Math.min(maxX, btnCenterX + nx * (push * 0.6)));
+          const safeY = Math.max(minY, Math.min(maxY, btnCenterY + ny * (push * 0.6)));
+          targetX = safeX;
+          targetY = safeY;
         } else {
           targetX = Math.max(minX, Math.min(maxX, targetX));
           targetY = Math.max(minY, Math.min(maxY, targetY));
         }
 
-        // set left/top as center coords, CSS uses translate(-50%,-50%)
+        // set left/top as center coords (CSS uses translate(-50%,-50%))
         noBtn.style.left = `${Math.round(targetX)}px`;
         noBtn.style.top = `${Math.round(targetY)}px`;
 
-        // optional subtle rotation to make it playful
-        const rot = (Math.random() - 0.5) * 10;
+        // a subtle rotation then back to normal to feel playful
+        const rot = (Math.random() - 0.5) * 6; // smaller rotation
         noBtn.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
 
-        // small timeout to reset rotation back to normal after move
+        // reset transform gently after the movement
         setTimeout(() => {
           noBtn.style.transform = 'translate(-50%,-50%)';
-        }, 520);
+        }, 420);
       }
     }
 
-    // When No is clicked (keeps the click behavior from previous version)
+    // ---------- Click behavior (keeps previous playful features) ----------
     noBtn.addEventListener('click', (e) => {
       noClicks++;
 
@@ -366,42 +379,49 @@
       const phrase = pleadingPhrases[(noClicks - 1) % pleadingPhrases.length];
       noBtn.textContent = phrase;
 
-      // 2) Move no button to a fun random place inside the stage (fallback if user manages to click)
-      moveButtonRandomly(noBtn);
+      // 2) Move no button to a gentle random place inside the stage (fallback on click)
+      moveButtonRandomlyGentle(noBtn);
 
       // 3) Make yes button bigger
-      yesScale += 0.08; // grows a bit each no-click
+      yesScale += 0.06; // smaller growth per click for balance
       yesBtn.style.transform = `translate(-50%,-50%) scale(${yesScale})`;
 
       // 4) Show a photo (append to noGallery)
       addNoGalleryPhoto();
 
-      // small playful wiggle on yes button to draw attention
+      // playful wiggle on yes button
       yesBtn.animate([
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` },
-        { transform: `translate(-50%,-50%) scale(${yesScale + 0.04}) rotate(-6deg)` },
-        { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(6deg)` },
+        { transform: `translate(-50%,-50%) scale(${yesScale + 0.03}) rotate(-5deg)` },
+        { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(5deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` }
       ], {
-        duration: 700,
+        duration: 600,
         easing: 'ease-out'
       });
     });
 
-    // Move an element randomly within the stage while keeping it visible (centers at left/top)
-    function moveButtonRandomly(btn){
+    // gentle random move (keeps it catchable)
+    function moveButtonRandomlyGentle(btn){
       const rect = stage.getBoundingClientRect();
       const btnRect = btn.getBoundingClientRect();
-      const padding = 14; // don't move to extreme edges
       const halfW = btnRect.width / 2;
       const halfH = btnRect.height / 2;
-      const minX = halfW + padding;
-      const maxX = rect.width - halfW - padding;
-      const minY = halfH + padding;
-      const maxY = rect.height - halfH - padding;
+      const minX = halfW + PADDING;
+      const maxX = rect.width - halfW - PADDING;
+      const minY = halfH + PADDING;
+      const maxY = rect.height - halfH - PADDING;
 
-      const newCenterX = randInt(minX, Math.max(minX, Math.floor(maxX)));
-      const newCenterY = randInt(minY, Math.max(minY, Math.floor(maxY)));
+      // choose a new center not too far from current position (so it's still catchable)
+      const currentLeft = btnRect.left - rect.left + halfW;
+      const currentTop = btnRect.top - rect.top + halfH;
+
+      // random offset within ±(MAX_PUSH * 0.6)
+      const dx = randInt(-Math.round(MAX_PUSH * 0.6), Math.round(MAX_PUSH * 0.6));
+      const dy = randInt(-Math.round(MAX_PUSH * 0.6), Math.round(MAX_PUSH * 0.6));
+
+      let newCenterX = Math.max(minX, Math.min(maxX, Math.round(currentLeft + dx)));
+      let newCenterY = Math.max(minY, Math.min(maxY, Math.round(currentTop + dy)));
 
       btn.style.left = newCenterX + "px";
       btn.style.top = newCenterY + "px";
@@ -424,16 +444,14 @@
       }
     }
 
-    // When Yes clicked
+    // ---------- Yes behavior ----------
     yesBtn.addEventListener('click', async (e) => {
-      // Show three photos
       yesImg1.src = yesImages[0] + (yesImages[0].includes('?') ? '&' : '?') + "rand=" + Date.now();
       yesImg2.src = yesImages[1] + (yesImages[1].includes('?') ? '&' : '?') + "rand=" + Date.now();
       yesImg3.src = yesImages[2] + (yesImages[2].includes('?') ? '&' : '?') + "rand=" + Date.now();
 
       yesOverlay.classList.add('show');
 
-      // Play music
       try {
         const audio = new Audio(musicUrl);
         audio.volume = 0.85;
@@ -442,10 +460,7 @@
         console.warn("Audio play failed (browser autoplay policy). Try clicking again.", err);
       }
 
-      // Spawn hearts randomly for a few seconds
-      spawnHearts(28);
-
-      // Optionally, lock the buttons to prevent further antics
+      spawnHearts(26);
       disableControlsTemporary();
     });
 
@@ -483,7 +498,7 @@
       }
     }
 
-    // initialize positions so CSS translate(-50%,-50%) centers the buttons
+    // initialize button positions so translate(-50%,-50%) centers them
     function initButtonPositions(){
       const rect = stage.getBoundingClientRect();
       const centerX = Math.floor(rect.width/2);
@@ -496,6 +511,7 @@
       yesBtn.style.transform = 'translate(-50%,-50%) scale(1)';
     }
 
+    // re-position on load/resize
     window.addEventListener('load', initButtonPositions);
     window.addEventListener('resize', initButtonPositions);
   </script>

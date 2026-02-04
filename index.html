@@ -5,35 +5,252 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mai — Will you be my Valentine?</title>
   <style>
-    /* (CSS same as before, omitted here for brevity in this preview) */
-    :root{ --bg: #fff0f6; --accent: #ff4d6d; --muted: #7a536b; }
-    html,body{ height:100%; margin:0; font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial; background: radial-gradient(circle at 10% 10%, #fff0f6 0%, #fff 30%), linear-gradient(180deg,#ffeef2 0%, #fff0f6 100%); color:#3b1f2b; display:flex; align-items:center; justify-content:center; }
-    .card{ position:relative; width:min(920px, 95vw); height:min(680px, 85vh); background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,240,246,0.9)); border-radius:18px; box-shadow: 0 12px 40px rgba(120,40,70,0.12); padding:30px; overflow:hidden; border:1px solid rgba(255,255,255,0.6); }
-    h1{ margin:0; font-size:clamp(24px, 3vw, 40px); letter-spacing:0.4px; color:#5a2336; text-align:center; }
-    p.lead{ text-align:center; margin:12px 0 28px; color:var(--muted); font-size:clamp(14px, 1.6vw, 18px); }
-    .stage { position:relative; width:100%; height:60%; border-radius:12px; background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.65), transparent 10%), linear-gradient(180deg, rgba(255,240,246,0.6), rgba(255, 245, 248, 0.2)); display:flex; align-items:center; justify-content:center; overflow:hidden; user-select:none; }
-    .btn { appearance:none; border:0; padding:14px 22px; font-size:18px; border-radius:999px; cursor:pointer; box-shadow: 0 8px 18px rgba(120,40,70,0.12); transition: transform 350ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms; }
-    .btn:active { transform: translateY(2px); }
-    .yes { background: linear-gradient(90deg,#ff6b81,#ff3b5c); color:white; }
-    .no { background: white; color:var(--accent); border:2px solid rgba(255,77,109,0.12); }
-    .controls { position:absolute; width:100%; height:100%; pointer-events:none; }
-    .controls button { pointer-events:auto; position:absolute; }
-    #yesBtn { left:calc(50% + 80px); top:50%; transform:translate(-50%,-50%) scale(1); }
-    #noBtn  { left:calc(50% - 80px); top:50%; transform:translate(-50%,-50%); }
-    #noBtn, #yesBtn { transition: left 700ms cubic-bezier(.2,.9,.2,1), top 700ms cubic-bezier(.2,.9,.2,1), transform 350ms; }
-    .no-gallery { position:absolute; left:12px; bottom:12px; display:flex; gap:8px; align-items:end; max-width:40%; max-height:40%; overflow:hidden; }
-    .no-gallery img { width:84px; height:64px; object-fit:cover; border-radius:10px; box-shadow: 0 6px 14px rgba(80,30,60,0.12); opacity:0; transform: translateY(12px) scale(.98); transition: opacity 450ms, transform 450ms; border:3px solid rgba(255,255,255,0.6); }
-    .no-gallery img.show { opacity:1; transform: translateY(0) scale(1); }
-    .yes-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:18px; background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,240,246,0.7)); pointer-events:none; opacity:0; transition: opacity 350ms; }
-    .yes-overlay.show { opacity:1; pointer-events:auto; }
-    .yes-overlay img { width:220px; height:140px; object-fit:cover; border-radius:12px; box-shadow: 0 12px 40px rgba(120,40,70,0.15); transform:scale(.98); transition: transform 450ms; }
+    :root{
+      --bg: #fff0f6;
+      --accent: #ff4d6d;
+      --muted: #7a536b;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: radial-gradient(circle at 10% 10%, #fff0f6 0%, #fff 30%), linear-gradient(180deg,#ffeef2 0%, #fff0f6 100%);
+      color:#3b1f2b;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .card{
+      position:relative;
+      width:min(920px, 95vw);
+      height:min(680px, 85vh);
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,240,246,0.9));
+      border-radius:18px;
+      box-shadow: 0 12px 40px rgba(120,40,70,0.12);
+      padding:30px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.6);
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(24px, 3vw, 40px);
+      letter-spacing:0.4px;
+      color:#5a2336;
+      text-align:center;
+    }
+    p.lead{
+      text-align:center;
+      margin:12px 0 28px;
+      color:var(--muted);
+      font-size:clamp(14px, 1.6vw, 18px);
+    }
+
+    .stage {
+      position:relative;
+      width:100%;
+      height:60%;
+      border-radius:12px;
+      background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.65), transparent 10%),
+                  linear-gradient(180deg, rgba(255,240,246,0.6), rgba(255, 245, 248, 0.2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      user-select:none;
+    }
+
+    .btn {
+      appearance:none;
+      border:0;
+      padding:14px 22px;
+      font-size:18px;
+      border-radius:999px;
+      cursor:pointer;
+      box-shadow: 0 8px 18px rgba(120,40,70,0.12);
+      transition: left 700ms cubic-bezier(.2,.9,.2,1), top 700ms cubic-bezier(.2,.9,.2,1), transform 350ms;
+      position:absolute;
+      transform: translate(-50%,-50%);
+    }
+
+    .btn:active { transform: translate(-50%,-50%) translateY(2px); }
+
+    .yes {
+      background: linear-gradient(90deg,#ff6b81,#ff3b5c);
+      color:white;
+    }
+    .no {
+      background: white;
+      color:var(--accent);
+      border:2px solid rgba(255,77,109,0.12);
+    }
+
+    /* initial positions */
+    #yesBtn { left:calc(50% + 80px); top:50%; }
+    #noBtn  { left:calc(50% - 80px); top:50%; }
+
+    /* photo gallery for no-clicks (bottom-left) */
+    .no-gallery {
+      position:absolute;
+      left:12px;
+      bottom:12px;
+      display:flex;
+      gap:8px;
+      align-items:end;
+      max-width:40%;
+      max-height:40%;
+      overflow:hidden;
+    }
+    .no-gallery img {
+      width:84px;
+      height:64px;
+      object-fit:cover;
+      border-radius:10px;
+      box-shadow: 0 6px 14px rgba(80,30,60,0.12);
+      opacity:0;
+      transform: translateY(12px) scale(.98);
+      transition: opacity 450ms, transform 450ms;
+      border:3px solid rgba(255,255,255,0.6);
+      cursor: pointer;
+    }
+    .no-gallery img.show {
+      opacity:1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* overlay for yes result (shows 3 photos) */
+    .yes-overlay {
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,240,246,0.7));
+      pointer-events:none;
+      opacity:0;
+      transition: opacity 350ms;
+    }
+    .yes-overlay.show {
+      opacity:1;
+      pointer-events:auto;
+    }
+    .yes-overlay img {
+      width:220px;
+      height:140px;
+      object-fit:cover;
+      border-radius:12px;
+      box-shadow: 0 12px 40px rgba(120,40,70,0.15);
+      transform:scale(.98);
+      transition: transform 450ms, box-shadow 300ms;
+      cursor: pointer;
+    }
     .yes-overlay.show img { transform:scale(1); }
-    .heart { position:absolute; width:26px; height:26px; background: linear-gradient(180deg,#ff6b81,#ff3b5c); transform: rotate(-45deg); left:50%; top:50%; border-radius:4px 4px 0 0; pointer-events:none; opacity:0.95; animation: floatUp 2600ms linear forwards; filter: drop-shadow(0 6px 14px rgba(120,40,70,0.12)); }
-    .heart::before, .heart::after { content:""; position:absolute; width:26px; height:26px; background: linear-gradient(180deg,#ff6b81,#ff3b5c); border-radius:50%; top:-13px; left:0; }
+    .yes-overlay img:hover { transform: scale(1.04); box-shadow: 0 18px 50px rgba(120,40,70,0.2); }
+
+    /* popup (center big photo) */
+    .popup {
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(20,10,15,0.45);
+      z-index:9999;
+      opacity:0;
+      pointer-events:none;
+      transition: opacity 250ms ease;
+      backdrop-filter: blur(6px) saturate(120%);
+    }
+    .popup.show {
+      opacity:1;
+      pointer-events:auto;
+    }
+    .popup-card {
+      max-width:min(88vw,980px);
+      max-height:86vh;
+      border-radius:14px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transform: scale(.8);
+      transition: transform 260ms cubic-bezier(.2,.9,.2,1);
+      box-shadow: 0 30px 80px rgba(20,10,20,0.45);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,253,0.95));
+    }
+    .popup.show .popup-card { transform: scale(1); }
+    .popup-card img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .popup-close {
+      position:absolute;
+      top:18px;
+      right:18px;
+      background:rgba(255,255,255,0.85);
+      border-radius:999px;
+      border:0;
+      padding:6px 10px;
+      cursor:pointer;
+      font-weight:600;
+      box-shadow:0 8px 18px rgba(120,40,70,0.08);
+    }
+
+    /* hearts */
+    .heart {
+      position:absolute;
+      width:26px;
+      height:26px;
+      background: linear-gradient(180deg,#ff6b81,#ff3b5c);
+      transform: rotate(-45deg);
+      left:50%;
+      top:50%;
+      border-radius:4px 4px 0 0;
+      pointer-events:none;
+      opacity:0.95;
+      animation: floatUp 2600ms linear forwards;
+      filter: drop-shadow(0 6px 14px rgba(120,40,70,0.12));
+    }
+    .heart::before, .heart::after {
+      content:"";
+      position:absolute;
+      width:26px;
+      height:26px;
+      background: linear-gradient(180deg,#ff6b81,#ff3b5c);
+      border-radius:50%;
+      top:-13px;
+      left:0;
+    }
     .heart::after { left:13px; top:0; }
-    @keyframes floatUp { 0% { transform: translateY(0) scale(.8) rotate(-45deg); opacity:1; } 30% { transform: translateY(-60px) scale(1.05) rotate(-35deg); } 70% { transform: translateY(-180px) scale(.95) rotate(-15deg); opacity:0.85; } 100% { transform: translateY(-320px) scale(.6) rotate(-5deg); opacity:0; } }
-    .footer { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:12px; color:var(--muted); font-size:13px; }
-    @media (max-width:600px){ .yes-overlay img { width:120px; height:88px; } .no-gallery img { width:64px; height:50px; } #yesBtn, #noBtn { padding:10px 14px; font-size:16px; } }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(.8) rotate(-45deg); opacity:1; }
+      30% { transform: translateY(-60px) scale(1.05) rotate(-35deg); }
+      70% { transform: translateY(-180px) scale(.95) rotate(-15deg); opacity:0.85; }
+      100% { transform: translateY(-320px) scale(.6) rotate(-5deg); opacity:0; }
+    }
+
+    /* small footer */
+    .footer {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:10px;
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* responsive */
+    @media (max-width:600px){
+      .yes-overlay img { width:120px; height:88px; }
+      .no-gallery img { width:64px; height:50px; }
+      #yesBtn, #noBtn { padding:10px 14px; font-size:16px; }
+    }
   </style>
 </head>
 <body>
@@ -59,6 +276,14 @@
     <div class="footer">Tip: if music doesn't play automatically, try clicking the page again — browsers require interaction for audio.</div>
   </div>
 
+  <!-- Popup element (hidden until used) -->
+  <div id="popup" class="popup" aria-hidden="true">
+    <div class="popup-card" role="dialog" aria-modal="true" aria-label="Photo popup">
+      <img id="popupImg" alt="Large view" />
+    </div>
+    <button id="popupClose" class="popup-close" aria-label="Close">✕</button>
+  </div>
+
   <script>
     // Elements
     const stage = document.getElementById('stage');
@@ -70,22 +295,22 @@
     const yesImg2 = document.getElementById('yesImg2');
     const yesImg3 = document.getElementById('yesImg3');
 
-    // ====== FILES: Replace these with your own file names or URLs ======
-    // For local approach, put files in an "assets" folder next to index.html
+    const popup = document.getElementById('popup');
+    const popupImg = document.getElementById('popupImg');
+    const popupClose = document.getElementById('popupClose');
+
+    // ====== Replace with your files (local assets/ or full URLs) ======
     const noImages = [
       "assets/no1.jpg",
       "assets/no2.jpg",
       "assets/no3.jpg",
       "assets/no4.jpg"
     ];
-
     const yesImages = [
       "assets/yes1.jpg",
       "assets/yes2.jpg",
       "assets/yes3.jpg"
     ];
-
-    // Music file - local or remote URL (e.g., "assets/music.mp3" or "https://.../music.mp3")
     const musicUrl = "assets/music.mp3";
     // ===================================================================
 
@@ -107,47 +332,112 @@
 
     function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+    // Show popup with a large image. autoCloseMs optional — if given it auto-closes.
+    function showPopup(src, autoCloseMs = 1200) {
+      popupImg.src = src + (src.includes('?') ? '&' : '?') + 'rand=' + Date.now();
+      popup.classList.add('show');
+      popup.setAttribute('aria-hidden', 'false');
+
+      // play a subtle pop sound? (commented out — optional)
+      // new Audio('assets/pop.mp3').play().catch(()=>{});
+
+      // auto-close if requested
+      if (autoCloseMs && autoCloseMs > 0) {
+        setTimeout(hidePopup, autoCloseMs);
+      }
+    }
+
+    function hidePopup() {
+      popup.classList.remove('show');
+      popup.setAttribute('aria-hidden', 'true');
+      // remove src to free memory (after animation)
+      setTimeout(() => { popupImg.src = ''; }, 300);
+    }
+
+    popupClose.addEventListener('click', hidePopup);
+    popup.addEventListener('click', (e) => {
+      // clicking outside the image also closes
+      if (e.target === popup || e.target === popupImg) hidePopup();
+    });
+    // close with ESC
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') hidePopup(); });
+
+    // When No is clicked
     noBtn.addEventListener('click', (e) => {
       noClicks++;
+
+      // 1) Change text to a random pleading phrase
       const phrase = pleadingPhrases[(noClicks - 1) % pleadingPhrases.length];
       noBtn.textContent = phrase;
+
+      // 2) Move no button to a fun random place inside the stage (click-triggered)
       moveButtonRandomly(noBtn);
+
+      // 3) Make yes button bigger
       yesScale += 0.08;
       yesBtn.style.transform = `translate(-50%,-50%) scale(${yesScale})`;
-      addNoGalleryPhoto();
+
+      // 4) Show a photo (append to noGallery) and pop it up to center briefly
+      addNoGalleryPhoto(true);
+
+      // small playful wiggle on yes button to draw attention
       yesBtn.animate([
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale + 0.04}) rotate(-6deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(6deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` }
-      ], { duration: 700, easing: 'ease-out' });
+      ], {
+        duration: 700,
+        easing: 'ease-out'
+      });
     });
 
+    // Move an element randomly within the stage while keeping it visible
     function moveButtonRandomly(btn){
       const rect = stage.getBoundingClientRect();
       const btnRect = btn.getBoundingClientRect();
-      const padding = 14;
-      const maxLeft = rect.width - btnRect.width - padding;
-      const maxTop = rect.height - btnRect.height - padding;
-      const newLeft = randInt(padding, Math.max(padding, Math.floor(maxLeft)));
-      const newTop = randInt(padding, Math.max(padding, Math.floor(maxTop)));
-      btn.style.left = newLeft + "px";
-      btn.style.top = newTop + "px";
-      btn.style.transform = "translate(0,0)";
+      const padding = 14; // don't move to extreme edges
+      const halfW = btnRect.width / 2;
+      const halfH = btnRect.height / 2;
+      const minX = halfW + padding;
+      const maxX = rect.width - halfW - padding;
+      const minY = halfH + padding;
+      const maxY = rect.height - halfH - padding;
+
+      const newCenterX = randInt(minX, Math.max(minX, Math.floor(maxX)));
+      const newCenterY = randInt(minY, Math.max(minY, Math.floor(maxY)));
+
+      btn.style.left = newCenterX + "px";
+      btn.style.top = newCenterY + "px";
+      btn.style.transform = 'translate(-50%,-50%)';
     }
 
-    function addNoGalleryPhoto(){
+    // Add a thumbnail to the no-gallery. If popupNow=true show it centered briefly.
+    function addNoGalleryPhoto(popupNow = false){
       const idx = (noClicks - 1) % noImages.length;
-      const src = noImages[idx] + (noImages[idx].includes('?') ? '&' : '?') + "rand=" + Date.now();
+      const srcBase = noImages[idx];
+      const src = srcBase + (srcBase.includes('?') ? '&' : '?') + "rand=" + Date.now();
       const img = document.createElement('img');
       img.src = src;
       img.alt = "cute photo";
+      img.addEventListener('click', () => showPopup(src, 0)); // click to open until manually closed
       noGallery.appendChild(img);
+
       img.onload = () => { setTimeout(()=> img.classList.add('show'), 40); };
       setTimeout(()=> img.classList.add('show'), 200);
-      while (noGallery.children.length > 6) { noGallery.removeChild(noGallery.firstChild); }
+
+      while (noGallery.children.length > 6) {
+        noGallery.removeChild(noGallery.firstChild);
+      }
+
+      // pop it to the center briefly for Mai
+      if (popupNow) {
+        // small delay so thumb appears then popup
+        setTimeout(() => showPopup(src, 1400), 220);
+      }
     }
 
+    // When Yes clicked
     yesBtn.addEventListener('click', async (e) => {
       yesImg1.src = yesImages[0] + (yesImages[0].includes('?') ? '&' : '?') + "rand=" + Date.now();
       yesImg2.src = yesImages[1] + (yesImages[1].includes('?') ? '&' : '?') + "rand=" + Date.now();
@@ -155,6 +445,12 @@
 
       yesOverlay.classList.add('show');
 
+      // clicking overlay photos opens the big popup for manual viewing
+      yesImg1.onclick = () => showPopup(yesImg1.src, 0);
+      yesImg2.onclick = () => showPopup(yesImg2.src, 0);
+      yesImg3.onclick = () => showPopup(yesImg3.src, 0);
+
+      // Play music
       try {
         const audio = new Audio(musicUrl);
         audio.volume = 0.85;
@@ -163,7 +459,10 @@
         console.warn("Audio play failed (browser autoplay policy). Try clicking again.", err);
       }
 
-      spawnHearts(24);
+      // Spawn hearts randomly for a few seconds
+      spawnHearts(26);
+
+      // Optionally, lock the buttons briefly
       disableControlsTemporary();
     });
 
@@ -194,10 +493,14 @@
         heart.style.animationDelay = (Math.random()*800) + 'ms';
         heart.style.opacity = 0.95 - Math.random()*0.2;
         stage.appendChild(heart);
-        setTimeout(()=> { heart.remove(); }, 3400 + Math.random()*800);
+
+        setTimeout(()=> {
+          heart.remove();
+        }, 3400 + Math.random()*800);
       }
     }
 
+    // initialize positions so CSS translate(-50%,-50%) centers the buttons
     function initButtonPositions(){
       const rect = stage.getBoundingClientRect();
       const centerX = Math.floor(rect.width/2);
@@ -210,6 +513,7 @@
       yesBtn.style.transform = 'translate(-50%,-50%) scale(1)';
     }
 
+    // re-position on load/resize
     window.addEventListener('load', initButtonPositions);
     window.addEventListener('resize', initButtonPositions);
   </script>

@@ -5,198 +5,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Mai — Will you be my Valentine?</title>
   <style>
-    :root{
-      --bg: #fff0f6;
-      --accent: #ff4d6d;
-      --muted: #7a536b;
-    }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
-      background: radial-gradient(circle at 10% 10%, #fff0f6 0%, #fff 30%), linear-gradient(180deg,#ffeef2 0%, #fff0f6 100%);
-      color:#3b1f2b;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .card{
-      position:relative;
-      width:min(920px, 95vw);
-      height:min(680px, 85vh);
-      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,240,246,0.9));
-      border-radius:18px;
-      box-shadow: 0 12px 40px rgba(120,40,70,0.12);
-      padding:30px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,0.6);
-    }
-
-    h1{
-      margin:0;
-      font-size:clamp(24px, 3vw, 40px);
-      letter-spacing:0.4px;
-      color:#5a2336;
-      text-align:center;
-    }
-    p.lead{
-      text-align:center;
-      margin:12px 0 28px;
-      color:var(--muted);
-      font-size:clamp(14px, 1.6vw, 18px);
-    }
-
-    .stage {
-      position:relative;
-      width:100%;
-      height:60%;
-      border-radius:12px;
-      background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.65), transparent 10%),
-                  linear-gradient(180deg, rgba(255,240,246,0.6), rgba(255, 245, 248, 0.2));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      user-select:none;
-    }
-
-    .btn {
-      appearance:none;
-      border:0;
-      padding:14px 22px;
-      font-size:18px;
-      border-radius:999px;
-      cursor:pointer;
-      box-shadow: 0 8px 18px rgba(120,40,70,0.12);
-      transition: left 420ms cubic-bezier(.2,.9,.2,1), top 420ms cubic-bezier(.2,.9,.2,1), transform 320ms;
-      position:absolute;
-      transform: translate(-50%,-50%);
-    }
-
-    .btn:active { transform: translate(-50%,-50%) translateY(2px); }
-
-    .yes {
-      background: linear-gradient(90deg,#ff6b81,#ff3b5c);
-      color:white;
-    }
-    .no {
-      background: white;
-      color:var(--accent);
-      border:2px solid rgba(255,77,109,0.12);
-    }
-
-    /* initial positions */
-    #yesBtn { left:calc(50% + 80px); top:50%; }
-    #noBtn  { left:calc(50% - 80px); top:50%; }
-
-    /* photo gallery for no-clicks (bottom-left) */
-    .no-gallery {
-      position:absolute;
-      left:12px;
-      bottom:12px;
-      display:flex;
-      gap:8px;
-      align-items:end;
-      max-width:40%;
-      max-height:40%;
-      overflow:hidden;
-    }
-    .no-gallery img {
-      width:84px;
-      height:64px;
-      object-fit:cover;
-      border-radius:10px;
-      box-shadow: 0 6px 14px rgba(80,30,60,0.12);
-      opacity:0;
-      transform: translateY(12px) scale(.98);
-      transition: opacity 450ms, transform 450ms;
-      border:3px solid rgba(255,255,255,0.6);
-    }
-    .no-gallery img.show {
-      opacity:1;
-      transform: translateY(0) scale(1);
-    }
-
-    /* overlay for yes result */
-    .yes-overlay {
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:18px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,240,246,0.7));
-      pointer-events:none;
-      opacity:0;
-      transition: opacity 350ms;
-    }
-    .yes-overlay.show {
-      opacity:1;
-      pointer-events:auto;
-    }
-    .yes-overlay img {
-      width:220px;
-      height:140px;
-      object-fit:cover;
-      border-radius:12px;
-      box-shadow: 0 12px 40px rgba(120,40,70,0.15);
-      transform:scale(.98);
-      transition: transform 450ms;
-    }
+    /* (CSS same as before, omitted here for brevity in this preview) */
+    :root{ --bg: #fff0f6; --accent: #ff4d6d; --muted: #7a536b; }
+    html,body{ height:100%; margin:0; font-family: "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial; background: radial-gradient(circle at 10% 10%, #fff0f6 0%, #fff 30%), linear-gradient(180deg,#ffeef2 0%, #fff0f6 100%); color:#3b1f2b; display:flex; align-items:center; justify-content:center; }
+    .card{ position:relative; width:min(920px, 95vw); height:min(680px, 85vh); background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,240,246,0.9)); border-radius:18px; box-shadow: 0 12px 40px rgba(120,40,70,0.12); padding:30px; overflow:hidden; border:1px solid rgba(255,255,255,0.6); }
+    h1{ margin:0; font-size:clamp(24px, 3vw, 40px); letter-spacing:0.4px; color:#5a2336; text-align:center; }
+    p.lead{ text-align:center; margin:12px 0 28px; color:var(--muted); font-size:clamp(14px, 1.6vw, 18px); }
+    .stage { position:relative; width:100%; height:60%; border-radius:12px; background: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.65), transparent 10%), linear-gradient(180deg, rgba(255,240,246,0.6), rgba(255, 245, 248, 0.2)); display:flex; align-items:center; justify-content:center; overflow:hidden; user-select:none; }
+    .btn { appearance:none; border:0; padding:14px 22px; font-size:18px; border-radius:999px; cursor:pointer; box-shadow: 0 8px 18px rgba(120,40,70,0.12); transition: transform 350ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms; }
+    .btn:active { transform: translateY(2px); }
+    .yes { background: linear-gradient(90deg,#ff6b81,#ff3b5c); color:white; }
+    .no { background: white; color:var(--accent); border:2px solid rgba(255,77,109,0.12); }
+    .controls { position:absolute; width:100%; height:100%; pointer-events:none; }
+    .controls button { pointer-events:auto; position:absolute; }
+    #yesBtn { left:calc(50% + 80px); top:50%; transform:translate(-50%,-50%) scale(1); }
+    #noBtn  { left:calc(50% - 80px); top:50%; transform:translate(-50%,-50%); }
+    #noBtn, #yesBtn { transition: left 700ms cubic-bezier(.2,.9,.2,1), top 700ms cubic-bezier(.2,.9,.2,1), transform 350ms; }
+    .no-gallery { position:absolute; left:12px; bottom:12px; display:flex; gap:8px; align-items:end; max-width:40%; max-height:40%; overflow:hidden; }
+    .no-gallery img { width:84px; height:64px; object-fit:cover; border-radius:10px; box-shadow: 0 6px 14px rgba(80,30,60,0.12); opacity:0; transform: translateY(12px) scale(.98); transition: opacity 450ms, transform 450ms; border:3px solid rgba(255,255,255,0.6); }
+    .no-gallery img.show { opacity:1; transform: translateY(0) scale(1); }
+    .yes-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:18px; background: linear-gradient(180deg, rgba(255,255,255,0.0), rgba(255,240,246,0.7)); pointer-events:none; opacity:0; transition: opacity 350ms; }
+    .yes-overlay.show { opacity:1; pointer-events:auto; }
+    .yes-overlay img { width:220px; height:140px; object-fit:cover; border-radius:12px; box-shadow: 0 12px 40px rgba(120,40,70,0.15); transform:scale(.98); transition: transform 450ms; }
     .yes-overlay.show img { transform:scale(1); }
-
-    /* hearts */
-    .heart {
-      position:absolute;
-      width:26px;
-      height:26px;
-      background: linear-gradient(180deg,#ff6b81,#ff3b5c);
-      transform: rotate(-45deg);
-      left:50%;
-      top:50%;
-      border-radius:4px 4px 0 0;
-      pointer-events:none;
-      opacity:0.95;
-      animation: floatUp 2600ms linear forwards;
-      filter: drop-shadow(0 6px 14px rgba(120,40,70,0.12));
-    }
-    .heart::before, .heart::after {
-      content:"";
-      position:absolute;
-      width:26px;
-      height:26px;
-      background: linear-gradient(180deg,#ff6b81,#ff3b5c);
-      border-radius:50%;
-      top:-13px;
-      left:0;
-    }
+    .heart { position:absolute; width:26px; height:26px; background: linear-gradient(180deg,#ff6b81,#ff3b5c); transform: rotate(-45deg); left:50%; top:50%; border-radius:4px 4px 0 0; pointer-events:none; opacity:0.95; animation: floatUp 2600ms linear forwards; filter: drop-shadow(0 6px 14px rgba(120,40,70,0.12)); }
+    .heart::before, .heart::after { content:""; position:absolute; width:26px; height:26px; background: linear-gradient(180deg,#ff6b81,#ff3b5c); border-radius:50%; top:-13px; left:0; }
     .heart::after { left:13px; top:0; }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(.8) rotate(-45deg); opacity:1; }
-      30% { transform: translateY(-60px) scale(1.05) rotate(-35deg); }
-      70% { transform: translateY(-180px) scale(.95) rotate(-15deg); opacity:0.85; }
-      100% { transform: translateY(-320px) scale(.6) rotate(-5deg); opacity:0; }
-    }
-
-    /* small footer */
-    .footer {
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:10px;
-      margin-top:12px;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    /* responsive */
-    @media (max-width:600px){
-      .yes-overlay img { width:120px; height:88px; }
-      .no-gallery img { width:64px; height:50px; }
-      #yesBtn, #noBtn { padding:10px 14px; font-size:16px; }
-    }
+    @keyframes floatUp { 0% { transform: translateY(0) scale(.8) rotate(-45deg); opacity:1; } 30% { transform: translateY(-60px) scale(1.05) rotate(-35deg); } 70% { transform: translateY(-180px) scale(.95) rotate(-15deg); opacity:0.85; } 100% { transform: translateY(-320px) scale(.6) rotate(-5deg); opacity:0; } }
+    .footer { display:flex; justify-content:center; align-items:center; gap:10px; margin-top:12px; color:var(--muted); font-size:13px; }
+    @media (max-width:600px){ .yes-overlay img { width:120px; height:88px; } .no-gallery img { width:64px; height:50px; } #yesBtn, #noBtn { padding:10px 14px; font-size:16px; } }
   </style>
 </head>
 <body>
@@ -219,7 +56,7 @@
       </div>
     </div>
 
-    <div class="footer">Tip: on mobile (touch) the button won't dodge — tap to interact.</div>
+    <div class="footer">Tip: if music doesn't play automatically, try clicking the page again — browsers require interaction for audio.</div>
   </div>
 
   <script>
@@ -233,20 +70,24 @@
     const yesImg2 = document.getElementById('yesImg2');
     const yesImg3 = document.getElementById('yesImg3');
 
-    // ====== Replace with your files (local assets/ or full URLs) ======
+    // ====== FILES: Replace these with your own file names or URLs ======
+    // For local approach, put files in an "assets" folder next to index.html
     const noImages = [
       "assets/no1.jpg",
       "assets/no2.jpg",
       "assets/no3.jpg",
       "assets/no4.jpg"
     ];
+
     const yesImages = [
       "assets/yes1.jpg",
       "assets/yes2.jpg",
       "assets/yes3.jpg"
     ];
+
+    // Music file - local or remote URL (e.g., "assets/music.mp3" or "https://.../music.mp3")
     const musicUrl = "assets/music.mp3";
-    // =================================================================
+    // ===================================================================
 
     const pleadingPhrases = [
       "Please, Mai... ❤️",
@@ -266,146 +107,33 @@
 
     function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-    // --- Hover-evade configuration ---
-    const HOVER_THRESHOLD = 140; // px: how close cursor must be to start evading
-    const MAX_PUSH = 220;        // px: maximum push-away distance
-    const PADDING = 12;          // px: keep button away from stage edge
-
-    let rafScheduled = false;
-    let lastMouse = { x: 0, y: 0 };
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-    // Enable evasive behavior only on non-touch devices
-    if (!isTouch) {
-      stage.addEventListener('mousemove', (ev) => {
-        lastMouse.x = ev.clientX;
-        lastMouse.y = ev.clientY;
-        if (!rafScheduled) {
-          rafScheduled = true;
-          requestAnimationFrame(processEvade);
-        }
-      });
-      // small playful nudge when pointer enters the button directly
-      noBtn.addEventListener('mouseenter', () => {
-        // slightly increase threshold effect
-        noBtn.animate([
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1)' },
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1.06)' },
-          { transform: noBtn.style.transform + ' translateZ(0) scale(1)' }
-        ], { duration: 420, easing: 'ease-out' });
-      });
-    }
-
-    function processEvade(){
-      rafScheduled = false;
-      const stageRect = stage.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
-
-      // mouse position relative to stage
-      const mx = lastMouse.x - stageRect.left;
-      const my = lastMouse.y - stageRect.top;
-
-      // current button center relative to stage
-      const btnCenterX = (btnRect.left - stageRect.left) + btnRect.width / 2;
-      const btnCenterY = (btnRect.top - stageRect.top) + btnRect.height / 2;
-
-      // vector from cursor to button center
-      const vx = btnCenterX - mx;
-      const vy = btnCenterY - my;
-      const dist = Math.hypot(vx, vy);
-
-      // only evade when cursor is close
-      if (dist < HOVER_THRESHOLD) {
-        // normalized vector
-        const nx = (dist === 0) ? (Math.random() - 0.5) : vx / dist;
-        const ny = (dist === 0) ? (Math.random() - 0.5) : vy / dist;
-
-        // compute push amount proportional to how close cursor is
-        const push = Math.min(MAX_PUSH, (HOVER_THRESHOLD - dist) * 1.4 + 30);
-
-        let targetX = btnCenterX + nx * push;
-        let targetY = btnCenterY + ny * push;
-
-        // constrain so button center stays inside stage bounds (account for half width/height)
-        const halfW = btnRect.width / 2;
-        const halfH = btnRect.height / 2;
-        const minX = halfW + PADDING;
-        const maxX = stageRect.width - halfW - PADDING;
-        const minY = halfH + PADDING;
-        const maxY = stageRect.height - halfH - PADDING;
-
-        // if target would go outside, bounce it to a random safe location instead
-        if (targetX < minX || targetX > maxX || targetY < minY || targetY > maxY) {
-          targetX = randInt(minX, maxX);
-          targetY = randInt(minY, maxY);
-        } else {
-          targetX = Math.max(minX, Math.min(maxX, targetX));
-          targetY = Math.max(minY, Math.min(maxY, targetY));
-        }
-
-        // set left/top as center coords, CSS uses translate(-50%,-50%)
-        noBtn.style.left = `${Math.round(targetX)}px`;
-        noBtn.style.top = `${Math.round(targetY)}px`;
-
-        // optional subtle rotation to make it playful
-        const rot = (Math.random() - 0.5) * 10;
-        noBtn.style.transform = `translate(-50%,-50%) rotate(${rot}deg)`;
-
-        // small timeout to reset rotation back to normal after move
-        setTimeout(() => {
-          noBtn.style.transform = 'translate(-50%,-50%)';
-        }, 520);
-      }
-    }
-
-    // When No is clicked (keeps the click behavior from previous version)
     noBtn.addEventListener('click', (e) => {
       noClicks++;
-
-      // 1) Change text to a random pleading phrase
       const phrase = pleadingPhrases[(noClicks - 1) % pleadingPhrases.length];
       noBtn.textContent = phrase;
-
-      // 2) Move no button to a fun random place inside the stage (fallback if user manages to click)
       moveButtonRandomly(noBtn);
-
-      // 3) Make yes button bigger
-      yesScale += 0.08; // grows a bit each no-click
+      yesScale += 0.08;
       yesBtn.style.transform = `translate(-50%,-50%) scale(${yesScale})`;
-
-      // 4) Show a photo (append to noGallery)
       addNoGalleryPhoto();
-
-      // small playful wiggle on yes button to draw attention
       yesBtn.animate([
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale + 0.04}) rotate(-6deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(6deg)` },
         { transform: `translate(-50%,-50%) scale(${yesScale}) rotate(0deg)` }
-      ], {
-        duration: 700,
-        easing: 'ease-out'
-      });
+      ], { duration: 700, easing: 'ease-out' });
     });
 
-    // Move an element randomly within the stage while keeping it visible (centers at left/top)
     function moveButtonRandomly(btn){
       const rect = stage.getBoundingClientRect();
       const btnRect = btn.getBoundingClientRect();
-      const padding = 14; // don't move to extreme edges
-      const halfW = btnRect.width / 2;
-      const halfH = btnRect.height / 2;
-      const minX = halfW + padding;
-      const maxX = rect.width - halfW - padding;
-      const minY = halfH + padding;
-      const maxY = rect.height - halfH - padding;
-
-      const newCenterX = randInt(minX, Math.max(minX, Math.floor(maxX)));
-      const newCenterY = randInt(minY, Math.max(minY, Math.floor(maxY)));
-
-      btn.style.left = newCenterX + "px";
-      btn.style.top = newCenterY + "px";
-      btn.style.transform = 'translate(-50%,-50%)';
+      const padding = 14;
+      const maxLeft = rect.width - btnRect.width - padding;
+      const maxTop = rect.height - btnRect.height - padding;
+      const newLeft = randInt(padding, Math.max(padding, Math.floor(maxLeft)));
+      const newTop = randInt(padding, Math.max(padding, Math.floor(maxTop)));
+      btn.style.left = newLeft + "px";
+      btn.style.top = newTop + "px";
+      btn.style.transform = "translate(0,0)";
     }
 
     function addNoGalleryPhoto(){
@@ -415,25 +143,18 @@
       img.src = src;
       img.alt = "cute photo";
       noGallery.appendChild(img);
-
       img.onload = () => { setTimeout(()=> img.classList.add('show'), 40); };
       setTimeout(()=> img.classList.add('show'), 200);
-
-      while (noGallery.children.length > 6) {
-        noGallery.removeChild(noGallery.firstChild);
-      }
+      while (noGallery.children.length > 6) { noGallery.removeChild(noGallery.firstChild); }
     }
 
-    // When Yes clicked
     yesBtn.addEventListener('click', async (e) => {
-      // Show three photos
       yesImg1.src = yesImages[0] + (yesImages[0].includes('?') ? '&' : '?') + "rand=" + Date.now();
       yesImg2.src = yesImages[1] + (yesImages[1].includes('?') ? '&' : '?') + "rand=" + Date.now();
       yesImg3.src = yesImages[2] + (yesImages[2].includes('?') ? '&' : '?') + "rand=" + Date.now();
 
       yesOverlay.classList.add('show');
 
-      // Play music
       try {
         const audio = new Audio(musicUrl);
         audio.volume = 0.85;
@@ -442,10 +163,7 @@
         console.warn("Audio play failed (browser autoplay policy). Try clicking again.", err);
       }
 
-      // Spawn hearts randomly for a few seconds
-      spawnHearts(28);
-
-      // Optionally, lock the buttons to prevent further antics
+      spawnHearts(24);
       disableControlsTemporary();
     });
 
@@ -467,7 +185,7 @@
       for(let i=0;i<count;i++){
         const heart = document.createElement('div');
         heart.className = 'heart';
-        const size = randInt(18, 48);
+        const size = randInt(18, 40);
         heart.style.width = size + 'px';
         heart.style.height = size + 'px';
         heart.style.left = randInt(10, Math.max(10, stageRect.width - 30)) + 'px';
@@ -476,14 +194,10 @@
         heart.style.animationDelay = (Math.random()*800) + 'ms';
         heart.style.opacity = 0.95 - Math.random()*0.2;
         stage.appendChild(heart);
-
-        setTimeout(()=> {
-          heart.remove();
-        }, 3400 + Math.random()*800);
+        setTimeout(()=> { heart.remove(); }, 3400 + Math.random()*800);
       }
     }
 
-    // initialize positions so CSS translate(-50%,-50%) centers the buttons
     function initButtonPositions(){
       const rect = stage.getBoundingClientRect();
       const centerX = Math.floor(rect.width/2);
